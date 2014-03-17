@@ -26,7 +26,7 @@ class Command(BaseCommand):
         # Delete trees with the same name beforehand.
         using = options.get('database', DEFAULT_DB_ALIAS)
         MODEL_TREE_CLASS.objects.filter(alias=tree_name).using(using).delete()
-        maintree = MODEL_TREE_CLASS.objects.create(alias=tree_name).using(using)
+        maintree = MODEL_TREE_CLASS.objects.using(using).create(alias=tree_name)
 
         tree_modules = import_project_sitetree_modules()
 
