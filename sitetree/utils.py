@@ -34,8 +34,8 @@ def tree(alias, title='', items=None):
 
 
 def item(title, url, children=None, url_as_pattern=True, hint='', alias='', description='', in_menu=True,
-         in_breadcrumbs=True, in_sitetree=True, access_loggedin=False, access_guest=False, access_restricted=False,
-         permissions=None):
+         in_breadcrumbs=True, in_sitetree=True, access_loggedin=False, access_guest=False,
+         access_staff=False, access_restricted=False, permissions=None):
     """Dynamically creates and returns a sitetree item object.
     `children` - a list of children for tree item. Children should also be created by `item` function.
 
@@ -44,7 +44,7 @@ def item(title, url, children=None, url_as_pattern=True, hint='', alias='', desc
                                    hint=hint, alias=alias, description=description, inmenu=in_menu,
                                    insitetree=in_sitetree, inbreadcrumbs=in_breadcrumbs,
                                    access_loggedin=access_loggedin, access_guest=access_guest,
-                                   access_restricted=access_restricted)
+                                   access_staff=access_staff, access_restricted=access_restricted)
     item_obj.id = generate_id_for(item_obj)
     item_obj.is_dynamic = True
     item_obj.dynamic_children = []

@@ -626,11 +626,15 @@ class SiteTree(object):
         """Checks whether a current user has an access to a certain item."""
 
         authenticated = self._global_context['request'].user.is_authenticated()
+        is_staff = self._global_context['request'].user.is_staff
 
         if item.access_loggedin and not authenticated:
             return False
 
         if item.access_guest and authenticated:
+            return False
+
+        if item.access_staff and not is_staff:
             return False
 
         if item.access_restricted:
