@@ -537,15 +537,15 @@ class SiteTree(object):
 
     def get_current_page_title(self, tree_alias, context):
         """Returns resolved from sitetree title for current page."""
-        return self.get_current_page_attr('title_resolved', tree_alias, context)
+        return self.get_current_page_attr('title_resolved', tree_alias, context, fail_silently=True)
 
-    def get_current_page_attr(self, attr_name, tree_alias, context):
+    def get_current_page_attr(self, attr_name, tree_alias, context, fail_silently=False):
         """Returns an arbitrary attribute of a sitetree item resolved as current for current page."""
         tree_alias, sitetree_items = self.init_tree(tree_alias, context)
         current_item = self.get_tree_current_item(tree_alias)
         # Current item is unresolved, fail silently.
         if current_item is None:
-            if settings.DEBUG:
+            if not fail_silently and settings.DEBUG:
                 raise SiteTreeError('Unable to resolve current sitetree item to get a `%s` for current page. Check whether there is an appropriate sitetree item defined for current URL.' % attr_name)
             return ''
         return getattr(current_item, attr_name, '')
