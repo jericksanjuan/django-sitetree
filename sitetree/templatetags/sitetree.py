@@ -1,4 +1,5 @@
 from django import template
+from django.utils.html import strip_tags
 
 from ..sitetreeapp import SiteTree
 
@@ -150,6 +151,18 @@ def sitetree_page_title(parser, token):
 
 
 @register.tag
+def sitetree_title(parser, token):
+    """Similar to above but with html elements removed, to be use for displaying in browser title."""
+    tokens = token.split_contents()
+
+    if len(tokens) == 3:
+        tree_alias = parser.compile_filter(tokens[2])
+        return sitetree_titleNode(tree_alias)
+    else:
+        raise template.TemplateSyntaxError("%r tag requires two arguments. E.g. {%% sitetree_title from \"mytree\" %%}." % tokens[0])
+
+
+@register.tag
 def sitetree_page_description(parser, token):
     """Renders a description for the current page, resolved against sitetree item representing current URL."""
     tokens = token.split_contents()
@@ -247,6 +260,18 @@ class sitetree_page_titleNode(template.Node):
         return sitetree.get_current_page_title(self.tree_alias, context)
 
 
+class sitetree_titleNode(template.Node):
+    """Renders a page title from the specified site tree."""
+
+    def __init__(self, tree_alias):
+        self.tree_alias = tree_alias
+
+    def render(self, context):
+        title = sitetree.get_current_page_title(self.tree_alias, context)
+        return strip_tags(title)
+
+
+
 class sitetree_page_descriptionNode(template.Node):
     """Renders a page description from the specified site tree."""
 
@@ -265,7 +290,7 @@ class sitetree_page_hintNode(template.Node):
 
     def render(self, context):
         return sitetree.get_current_page_attr('hint', self.tree_alias, context)
-    
+
 
 def detect_clause(parser, clause_name, tokens):
     """Helper function detects a certain clause in tag tokens list.
