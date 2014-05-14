@@ -267,9 +267,9 @@ class sitetree_titleNode(template.Node):
         self.tree_alias = tree_alias
 
     def render(self, context):
-        title = sitetree.get_current_page_title(self.tree_alias, context)
-        return strip_tags(title)
-
+        lazytitle = sitetree.get_current_page_title(self.tree_alias, context)
+        lazytitle.title = strip_tags(lazytitle.title)
+        return lazytitle
 
 
 class sitetree_page_descriptionNode(template.Node):
