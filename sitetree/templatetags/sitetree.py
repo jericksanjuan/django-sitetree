@@ -268,7 +268,10 @@ class sitetree_titleNode(template.Node):
 
     def render(self, context):
         lazytitle = sitetree.get_current_page_title(self.tree_alias, context)
-        lazytitle.title = strip_tags(lazytitle.title)
+        if type(lazytitle) is unicode:
+            lazytitle = strip_tags(lazytitle)
+        else:
+            lazytitle.title = strip_tags(lazytitle.title)
         return lazytitle
 
 
